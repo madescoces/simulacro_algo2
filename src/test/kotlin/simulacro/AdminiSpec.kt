@@ -1,0 +1,4 @@
+package simulacro
+
+class AdminiSpec {
+}
