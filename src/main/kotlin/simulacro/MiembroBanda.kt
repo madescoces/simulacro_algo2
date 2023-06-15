@@ -1,27 +1,26 @@
 package simulacro
 
-abstract class Persona {
-    abstract var banda: Banda
+abstract class MiembroBanda(val banda:Banda) {
     abstract fun condicionAceptarTarea(tarea: Tarea): Boolean
 }
 
-class AltoPerfil(override var banda:Banda): Persona() {
+class MiembroAltoPerfil(banda:Banda): MiembroBanda(banda) {
     override fun condicionAceptarTarea(tarea: Tarea) = true
 }
 
-class Culposo(override var banda:Banda): Persona() {
+class MiembroCulposo(banda:Banda): MiembroBanda(banda) {
     override fun condicionAceptarTarea(tarea: Tarea) = true
 }
 
-class Alternante(override var banda:Banda): Persona() {
+class MiembroAlternante(banda:Banda): MiembroBanda(banda) {
     override fun condicionAceptarTarea(tarea: Tarea) = true
 }
 
-class Cabulero(override var banda:Banda): Persona() {
+class MiembroCabulero(banda:Banda): MiembroBanda(banda) {
     override fun condicionAceptarTarea(tarea: Tarea) = true
 }
 
-class Combinada(override var banda:Banda): Persona() {
+class MiembroCombinado(banda:Banda): MiembroBanda(banda) {
     override fun condicionAceptarTarea(tarea: Tarea) = true
 }
 

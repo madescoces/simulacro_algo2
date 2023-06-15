@@ -2,46 +2,52 @@ package simulacro
 abstract class Banda {
     open lateinit var Vito: Administrador
     var saldo = 0
-    val integrantes = mutableSetOf<Persona>()
-    lateinit var tareaAsignada: Tarea
+    val miembros = mutableSetOf<MiembroBanda>()
+    val tareasAsignadas = mutableSetOf<Tarea>()
 
-    fun addPersona(persona: Persona){
-        integrantes.add(persona)
+    fun addPersona(miembro: MiembroBanda){
+        miembros.add(miembro)
     }
-    fun removePersona(persona:Persona){
-        integrantes.remove(persona)
+
+    fun removePersona(miembro:MiembroBanda){
+        miembros.remove(miembro)
     }
+
     fun asignarTarea(tarea: Tarea){
-        condicionAceptarTarea(tarea)
-        tareaAsignada = tarea
+        if (!tarea.isBandaInitialized() && condicionAceptarTarea(tarea)){
+            tareasAsignadas.add(tarea)
+            tarea.banda = this
+        }
     }
-    fun lider() = integrantes.first()
+
+    fun lider() = miembros.first()
     fun enBancarrota() = saldo <= 0
 
     fun cobrar(monto: Int){ saldo += monto}
     fun gastar(monto: Int){ Vito.saldo -= monto}
 
-    //VALIDACIONES//
-    open fun condicionAceptarTarea(tarea: Tarea){
-        if (enBancarrota()) throw BusinessException("No tenemos un mango")
-    }
+    abstract fun condicionAceptarTarea(tarea: Tarea): Boolean
+    abstract fun realizarTarea(tarea:Tarea)
 }
+
 class Forajida(override var Vito: Administrador) : Banda() {
-    override fun condicionAceptarTarea(tarea: Tarea) {
-        super.condicionAceptarTarea(tarea)
-        integrantes.any{ it.condicionAceptarTarea(tarea) }
+    override fun condicionAceptarTarea(tarea: Tarea) = miembros.any{ it.condicionAceptarTarea(tarea) }
+    override fun realizarTarea(tarea:Tarea) {
+
     }
 }
+
 class Sorora(override var Vito: Administrador) : Banda() {
-    override fun condicionAceptarTarea(tarea: Tarea) {
-        super.condicionAceptarTarea(tarea)
-        integrantes.all{ it.condicionAceptarTarea(tarea) }
+    override fun condicionAceptarTarea(tarea: Tarea) = miembros.all{ it.condicionAceptarTarea(tarea) }
+    override fun realizarTarea(tarea:Tarea) {
+
     }
 }
+
 class Tipica(override var Vito: Administrador) : Banda() {
-    override fun condicionAceptarTarea(tarea: Tarea) {
-        super.condicionAceptarTarea(tarea)
-        lider().condicionAceptarTarea(tarea)
+    override fun condicionAceptarTarea(tarea: Tarea) = lider().condicionAceptarTarea(tarea)
+    override fun realizarTarea(tarea:Tarea) {
+
     }
 }
 
